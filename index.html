@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script type="module" src="build/main.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="panel">
+                <h2>Settings</h2>
+                <table>
+                    <tr>
+                        <td><label for="precision" class="config">Precision:</label></td>
+                        <td>
+                            <select id="precision" class="config">
+                                <option value="float">Float</option>
+                                <option value="4">60 Bit</option>
+                                <option value="5">75 Bit</option>
+                                <option value="6">90 Bit</option>
+                                <option value="7">105 Bit</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="iterations" class="config">Iterations:</label></td>
+                        <td><input id="iterations" class="config" type="number" min=10 max=1000 value=100></td>
+                    </tr>
+                    <tr>
+                        <td><label for="threshold" class="config">Threshold:</div></td>
+                        <td><input id="threshold" class="config" type="number" min=1 max=1000 value=10></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input id="applyBtn" type="button" class="config" value="Apply"></td>
+                    </tr>
+                </table>
+            </div>
+            <canvas id="canvas"></canvas>
+        </div>
+    </body>
+</html>

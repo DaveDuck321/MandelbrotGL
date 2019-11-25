@@ -1,0 +1,16 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "watch": true,
+        "target": "esnext",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "outDir": "build/",
+        "lib": ["dom", "es7"],
+    },
+    "include": [
+        "src/*", "src/fractals/fractalFloat.ts", "src/fractals/fractalDecimal.ts", "src/fractals/shaders.ts", "src/math/bigNum.ts"
+    ]
+}
