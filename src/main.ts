@@ -28,8 +28,6 @@ const backendFunctions = {
 };
 
 let state:{
-    screenInvalid: boolean,
-
     precision: number,
     itterations: number,
     threshold: number,
@@ -60,7 +58,7 @@ function changeSettings() {
     }
     state.itterations = parseFloat(iterationsInput.value);
     state.threshold = parseFloat(thresholdInput.value);
-    state.screenInvalid = true;
+    requestAnimationFrame(onAnimationFrame);
 }
 
 function onAnimationFrame() {
@@ -72,8 +70,6 @@ function onAnimationFrame() {
 }
 
 function scrollWheel(e:WheelEvent) {
-    state.screenInvalid = true;
-
     let direction = e.deltaY > 0 ? -1:1;
     let canvas = <HTMLCanvasElement>e.srcElement;
 
@@ -97,6 +93,8 @@ function scrollWheel(e:WheelEvent) {
 
     state.corners.left = add(left, multiply(subtract(centerX, left), speed));
     state.corners.width = subtract(add(add(left, width), multiply(subtract(centerX, add(left, width)), speed)), state.corners.left);
+
+    requestAnimationFrame(onAnimationFrame);
 }
 
 window.onload = ()=>{
@@ -105,7 +103,6 @@ window.onload = ()=>{
     canvasElement.width = canvasElement.offsetWidth;
 
     state = {
-        screenInvalid: true,
         corners: {
             width: getBigNum(4),
             height: getBigNum(4),

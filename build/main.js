@@ -42,7 +42,7 @@ function changeSettings() {
     }
     state.itterations = parseFloat(iterationsInput.value);
     state.threshold = parseFloat(thresholdInput.value);
-    state.screenInvalid = true;
+    requestAnimationFrame(onAnimationFrame);
 }
 function onAnimationFrame() {
     let { ctx } = state.opengl;
@@ -51,7 +51,6 @@ function onAnimationFrame() {
     backendFunctions.Draw[state.backend](state.opengl, state.corners, 6);
 }
 function scrollWheel(e) {
-    state.screenInvalid = true;
     let direction = e.deltaY > 0 ? -1 : 1;
     let canvas = e.srcElement;
     let { width, height, bottom, left } = state.corners;
@@ -70,13 +69,13 @@ function scrollWheel(e) {
     state.corners.height = subtract(add(add(bottom, height), multiply(subtract(centerY, add(bottom, height)), speed)), state.corners.bottom);
     state.corners.left = add(left, multiply(subtract(centerX, left), speed));
     state.corners.width = subtract(add(add(left, width), multiply(subtract(centerX, add(left, width)), speed)), state.corners.left);
+    requestAnimationFrame(onAnimationFrame);
 }
 window.onload = () => {
     const canvasElement = document.getElementById("canvas");
     canvasElement.height = canvasElement.offsetHeight;
     canvasElement.width = canvasElement.offsetWidth;
     state = {
-        screenInvalid: true,
         corners: {
             width: getBigNum(4),
             height: getBigNum(4),
