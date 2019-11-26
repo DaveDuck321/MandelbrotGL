@@ -114,7 +114,7 @@ window.onload = ()=>{
     canvasElement.width = canvasElement.offsetWidth;
 
     const center = [-0.75, 0];
-    const aspect = canvasElement.width/canvasElement.height;
+    const aspect = canvasElement.height/canvasElement.width;
 
     state = {
         drawQueued:false,

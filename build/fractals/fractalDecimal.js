@@ -133,15 +133,60 @@ Number multiply(in Number a, in Number b) {
     return tempNum;
 }
 
+Number multiplyFast(in Number a, in Number b) {
+    tempNum.sign = a.sign == b.sign;
+
+    for(uint index = 0u; index < size; index++) {
+        tempNum.data[index] = 0u;
+    }
+    
+    for(int bottom = int(size-1u); bottom >= 0; bottom--) {
+        uint carry = 0u;
+
+        for(int top = int(size-1u); top >= 0; top--) {
+            int index = top + bottom;
+            if(index >= 0 && uint(index) < size) {
+                uint result = a.data[top] * b.data[bottom] + carry + tempNum.data[index];
+                carry = result/base;
+                tempNum.data[index] = result%base;
+            }
+        }
+        for(int index = bottom-1; index >=0 && carry != 0u; index--) {
+            uint result = carry + tempNum.data[index];
+            carry = result/base;
+            tempNum.data[index] = result%base;
+        }
+    }
+    return tempNum;
+}
+
+Number doubleNum(in Number a) {
+    tempNum.sign = a.sign;
+
+    for(uint i = 0u, carry = 0u; i < size; i++) {
+        uint index = size-1u - i;
+
+        uint result = 2u*a.data[index] + carry;
+        carry = result/base;
+
+        tempNum.data[index] = result%base;
+    }
+    return tempNum;
+}
+
 uint stepsToInfinity(Number cReal, Number cImag) {
     Number zReal = cReal;
     Number zImag = cImag;
 
     for(uint i=0u; i<itter; i++) {
-        Number product = multiply(zReal, zImag);
+        //Number product = multiply(zReal, zImag);
+        Number product = multiplyFast(zReal, zImag);
 
-        zReal = add(addIgnoreSign(multiply(zReal, zReal), multiply(zImag, zImag), true, false), cReal);
-        zImag = add(add(product, product), cImag);
+        //zReal = add(addIgnoreSign(multiply(zReal, zReal), multiply(zImag, zImag), true, false), cReal);
+        //zImag = add(add(product, product), cImag);
+
+        zReal = add(addIgnoreSign(multiplyFast(zReal, zReal), multiplyFast(zImag, zImag), true, false), cReal);
+        zImag = add(doubleNum(product), cImag);
 
         if(zReal.data[0]*zReal.data[0] + zImag.data[0]*zImag.data[0] > farSquared) {
             return i;
