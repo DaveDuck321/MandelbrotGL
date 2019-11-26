@@ -20,6 +20,15 @@ const backendFunctions = {
     ],
 };
 let state;
+function drawFrameOnce() {
+    if (state.drawQueued)
+        return;
+    state.drawQueued = true;
+    requestAnimationFrame(() => {
+        onAnimationFrame();
+        state.drawQueued = false;
+    });
+}
 function changeSettings() {
     const precisionSelection = document.getElementById("precision");
     const iterationsInput = document.getElementById("iterations");
@@ -42,7 +51,7 @@ function changeSettings() {
     }
     state.itterations = parseFloat(iterationsInput.value);
     state.threshold = parseFloat(thresholdInput.value);
-    requestAnimationFrame(onAnimationFrame);
+    drawFrameOnce();
 }
 function onAnimationFrame() {
     let { ctx } = state.opengl;
@@ -69,7 +78,7 @@ function scrollWheel(e) {
     state.corners.height = subtract(add(add(bottom, height), multiply(subtract(centerY, add(bottom, height)), speed)), state.corners.bottom);
     state.corners.left = add(left, multiply(subtract(centerX, left), speed));
     state.corners.width = subtract(add(add(left, width), multiply(subtract(centerX, add(left, width)), speed)), state.corners.left);
-    requestAnimationFrame(onAnimationFrame);
+    drawFrameOnce();
 }
 window.onload = () => {
     const canvasElement = document.getElementById("canvas");
@@ -78,6 +87,7 @@ window.onload = () => {
     const center = [-0.75, 0];
     const aspect = canvasElement.width / canvasElement.height;
     state = {
+        drawQueued: false,
         corners: {
             width: getBigNum(4),
             height: getBigNum(4 * aspect),
@@ -92,6 +102,6 @@ window.onload = () => {
     };
     document.getElementById("applyBtn").onclick = changeSettings;
     canvasElement.onwheel = scrollWheel;
-    requestAnimationFrame(onAnimationFrame);
+    drawFrameOnce();
 };
 //# sourceMappingURL=main.js.map

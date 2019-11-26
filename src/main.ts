@@ -28,6 +28,8 @@ const backendFunctions = {
 };
 
 let state:{
+    drawQueued: boolean,
+
     precision: number,
     itterations: number,
     threshold: number,
@@ -36,6 +38,15 @@ let state:{
     opengl:GL_State,
     backend:Backend,
 };
+
+function drawFrameOnce() {
+    if(state.drawQueued) return;
+    state.drawQueued = true;
+    requestAnimationFrame(()=>{
+        onAnimationFrame();
+        state.drawQueued = false;
+    });
+}
 
 function changeSettings() {
     const precisionSelection = <HTMLSelectElement>document.getElementById("precision");
@@ -58,7 +69,7 @@ function changeSettings() {
     }
     state.itterations = parseFloat(iterationsInput.value);
     state.threshold = parseFloat(thresholdInput.value);
-    requestAnimationFrame(onAnimationFrame);
+    drawFrameOnce();
 }
 
 function onAnimationFrame() {
@@ -94,7 +105,7 @@ function scrollWheel(e:WheelEvent) {
     state.corners.left = add(left, multiply(subtract(centerX, left), speed));
     state.corners.width = subtract(add(add(left, width), multiply(subtract(centerX, add(left, width)), speed)), state.corners.left);
 
-    requestAnimationFrame(onAnimationFrame);
+    drawFrameOnce();
 }
 
 window.onload = ()=>{
@@ -106,6 +117,7 @@ window.onload = ()=>{
     const aspect = canvasElement.width/canvasElement.height;
 
     state = {
+        drawQueued:false,
         corners: {
             width: getBigNum(4),
             height: getBigNum(4*aspect),
@@ -121,5 +133,5 @@ window.onload = ()=>{
 
     (<HTMLElement>document.getElementById("applyBtn")).onclick = changeSettings;
     canvasElement.onwheel = scrollWheel;
-    requestAnimationFrame(onAnimationFrame);
+    drawFrameOnce();
 };
