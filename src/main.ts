@@ -102,12 +102,15 @@ window.onload = ()=>{
     canvasElement.height = canvasElement.offsetHeight;
     canvasElement.width = canvasElement.offsetWidth;
 
+    const center = [-0.75, 0];
+    const aspect = canvasElement.width/canvasElement.height;
+
     state = {
         corners: {
             width: getBigNum(4),
-            height: getBigNum(4),
-            bottom: getBigNum(-2),
-            left: getBigNum(-2.5),
+            height: getBigNum(4*aspect),
+            bottom: getBigNum(-4*aspect*0.5 + center[1]),
+            left: getBigNum(-4*0.5 + center[0]),
         },
         precision: 4,
         itterations: 100,
